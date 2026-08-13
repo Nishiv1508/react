@@ -86,6 +86,16 @@ function DateCount() {
   const stepPlus = () => {
     setStep((s) => s + 1);
   };
+  // const handleChange = (e) => {
+  //   setCount(Number(e.target.value));
+  //   setDate((d) => new Date(d.getTime() + step * 24 * 3600 * 1000));
+  // };
+
+  const handleClick = () => {
+    setDate(new Date());
+    setCount(0);
+    setStep(1);
+  };
 
   return (
     <>
@@ -93,15 +103,27 @@ function DateCount() {
         <button onClick={stepMinus}>-</button>
         <span>{step}</span>
         <button onClick={stepPlus}>+</button>
+
+        {/* <input
+          type="range"
+          min={1}
+          max={7}
+          value={step}
+          onChange={(e) => setStep(Number(e.target.value))}
+        />
+        {step} */}
       </div>
 
       <div>
         <button onClick={countMinus}>-</button>
         <span>{count}</span>
+        {/* <input type="text" value={count} onChange={handleChange} /> */}
         <button onClick={countPlus}>+</button>
       </div>
 
       <p>{date.toLocaleDateString()}</p>
+
+      <button onClick={handleClick}>Reset</button>
     </>
   );
 }
