@@ -1,0 +1,110 @@
+import { useState } from "react";
+
+const messages = [
+  "Learn React ⚛️",
+  "Apply for jobs 💼",
+  "Invest your new income 🤑",
+];
+
+function App() {
+  const [step, setStep] = useState(1);
+  const [isOpen, setIsOpen] = useState(true);
+
+  const handlePrevious = () => {
+    if (step <= 1) {
+      setStep(3);
+    } else {
+      setStep((step) => step - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (step >= 3) {
+      setStep(1);
+    } else {
+      setStep((step) => step + 1);
+    }
+  };
+
+  return (
+    <>
+      <button className="close" onClick={() => setIsOpen(!isOpen)}>
+        X
+      </button>
+
+      {isOpen && (
+        <div className="steps">
+          <div className="numbers">
+            <div className={step >= 1 ? "active" : ""}>1</div>
+            <div className={step >= 2 ? "active" : ""}>2</div>
+            <div className={step >= 3 ? "active" : ""}>3</div>
+          </div>
+
+          <p className="message">
+            Step {step}: {messages[step - 1]}
+          </p>
+
+          <div className="buttons">
+            <button
+              style={{ backgroundColor: "#7950f2", color: "#fff" }}
+              onClick={handlePrevious}
+            >
+              Previous
+            </button>
+            <button
+              style={{ backgroundColor: "#7950f2", color: "#fff" }}
+              onClick={handleNext}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
+
+      <DateCount />
+    </>
+  );
+}
+
+function DateCount() {
+  const [step, setStep] = useState(1);
+  const [count, setCount] = useState(0);
+  const [date, setDate] = useState(new Date());
+  const today = new Date();
+
+  const countMinus = () => {
+    setCount((c) => c - 1);
+    setDate((d) => new Date(d.getTime() - step * 24 * 3600 * 1000));
+  };
+  const countPlus = () => {
+    setCount((c) => c + 1);
+    setDate((d) => new Date(d.getTime() + step * 24 * 3600 * 1000));
+  };
+
+  const stepMinus = () => {
+    setStep((s) => s - 1);
+  };
+  const stepPlus = () => {
+    setStep((s) => s + 1);
+  };
+
+  return (
+    <>
+      <div>
+        <button onClick={stepMinus}>-</button>
+        <span>{step}</span>
+        <button onClick={stepPlus}>+</button>
+      </div>
+
+      <div>
+        <button onClick={countMinus}>-</button>
+        <span>{count}</span>
+        <button onClick={countPlus}>+</button>
+      </div>
+
+      <p>{date.toLocaleDateString()}</p>
+    </>
+  );
+}
+
+export default App;
