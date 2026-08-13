@@ -70,7 +70,6 @@ function DateCount() {
   const [step, setStep] = useState(1);
   const [count, setCount] = useState(0);
   const [date, setDate] = useState(new Date());
-  const today = new Date();
 
   const countMinus = () => {
     setCount((c) => c - 1);
