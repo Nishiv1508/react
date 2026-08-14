@@ -45,24 +45,30 @@ function App() {
           </p>
 
           <div className="buttons">
-            <button
-              style={{ backgroundColor: "#7950f2", color: "#fff" }}
-              onClick={handlePrevious}
-            >
-              Previous
-            </button>
-            <button
-              style={{ backgroundColor: "#7950f2", color: "#fff" }}
-              onClick={handleNext}
-            >
-              Next
-            </button>
+            <Button bgColor="#7950f2" textColor="#fff" onClick={handlePrevious}>
+              <span>Previous</span>
+            </Button>
+            <Button bgColor="#7950f2" textColor="#fff" onClick={handleNext}>
+              <span>Next</span>
+            </Button>
           </div>
         </div>
       )}
 
       <DateCount />
     </>
+  );
+}
+
+//Children prop has the value between the opening and closing of the react component
+function Button({ textColor, bgColor, onClick, children }) {
+  return (
+    <button
+      style={{ backgroundColor: bgColor, color: textColor }}
+      onClick={onClick}
+    >
+      {children}
+    </button>
   );
 }
 
