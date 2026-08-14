@@ -40,9 +40,7 @@ function App() {
             <div className={step >= 3 ? "active" : ""}>3</div>
           </div>
 
-          <p className="message">
-            Step {step}: {messages[step - 1]}
-          </p>
+          <StepMessage step={step}>{messages[step - 1]}</StepMessage>
 
           <div className="buttons">
             <Button bgColor="#7950f2" textColor="#fff" onClick={handlePrevious}>
@@ -60,7 +58,16 @@ function App() {
   );
 }
 
-//Children prop has the value between the opening and closing of the react component
+function StepMessage({ step, children }) {
+  return (
+    <p className="message">
+      <h3>Step {step}</h3>
+      {children}
+    </p>
+  );
+}
+
+//Children prop has the value between the opening and closing of the react component. If not destructuring then it can be accessed with props.children
 function Button({ textColor, bgColor, onClick, children }) {
   return (
     <button
