@@ -67,7 +67,7 @@ function StepMessage({ step, children }) {
   );
 }
 
-//Children prop has the value between the opening and closing of the react component. If not destructuring then it can be accessed with props.children
+//Children (Component Composition) prop has the value between the opening and closing of the react component. If not destructuring then it can be accessed with props.children
 function Button({ textColor, bgColor, onClick, children }) {
   return (
     <button
