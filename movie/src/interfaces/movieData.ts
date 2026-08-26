@@ -10,3 +10,9 @@ export interface watchedMovieData extends dummyMovieData {
   imdbRating: number;
   userRating: number;
 }
+
+export interface movieResponseData {
+  Search: dummyMovieData[];
+  totalResults: string;
+  Response: string;
+}
