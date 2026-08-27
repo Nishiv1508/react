@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { movieDetails } from "../interfaces/movieData";
+import type { movieDetails, watchedMovieData } from "../interfaces/movieData";
 import StarComponent from "./StarComponent";
 import Loader from "./loader";
 
@@ -8,15 +8,26 @@ const url: string = import.meta.env.VITE_OMDB_URL;
 export default function MovieDetails({
   selectedId,
   onCloseMovie,
+  onAddWatched,
+  watched,
 }: {
   selectedId: string;
   onCloseMovie: () => void;
+  onAddWatched: (movie: watchedMovieData) => void;
+  watched: watchedMovieData[];
 }) {
   const [movie, setMovie] = useState<Partial<movieDetails>>({});
   const [loading, setLoading] = useState(false);
+  const [userRating, setUserRating] = useState(0);
+
+  const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
+  const watchedUserRating = watched.find(
+    (movie) => movie.imdbID === selectedId,
+  )?.userRating;
+
   const {
     Title: title,
-    // Year: year,
+    Year: year,
     Poster: poster,
     Runtime: runtime,
     imdbRating: imdbRating,
@@ -26,6 +37,20 @@ export default function MovieDetails({
     Director: director,
     Genre: genre,
   } = movie;
+
+  function handleAdd() {
+    const newWatchedMovie: watchedMovieData = {
+      imdbID: selectedId,
+      Title: title || "",
+      Year: year || "",
+      Poster: poster || "",
+      imdbRating: Number(imdbRating),
+      runtime: Number(runtime?.split(" ").at(0)),
+      userRating,
+    };
+    onAddWatched(newWatchedMovie);
+    onCloseMovie();
+  }
 
   useEffect(
     function () {
@@ -63,7 +88,25 @@ export default function MovieDetails({
 
           <section>
             <div className="rating">
-              <StarComponent size={20} maxRating={10} />
+              {!isWatched ? (
+                <>
+                  <StarComponent
+                    size={20}
+                    maxRating={10}
+                    onSetRating={setUserRating}
+                  />
+                  {userRating > 0 && (
+                    <button className="btn-add" onClick={handleAdd}>
+                      Add to List
+                    </button>
+                  )}
+                </>
+              ) : (
+                <p>
+                  You have already watched this movie. You rated it{" "}
+                  {watchedUserRating}
+                </p>
+              )}
             </div>
             <p>
               <em>{plot}</em>

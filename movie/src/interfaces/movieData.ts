@@ -18,6 +18,7 @@ export interface movieResponseData {
 }
 
 export interface movieDetails extends dummyMovieData {
+  Title: string;
   Runtime: string;
   imdbRating: string;
   Plot: string;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type {
   dummyMovieData,
-  // watchedMovieData,
+  watchedMovieData,
 } from "./interfaces/movieData.ts";
 import type { movieResponseData } from "./interfaces/movieData.ts";
 
@@ -21,7 +21,7 @@ const url: string = import.meta.env.VITE_OMDB_URL;
 
 function App() {
   const [movies, setMovies] = useState<dummyMovieData[]>([]);
-  const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useState<watchedMovieData[]>([]);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -34,6 +34,14 @@ function App() {
 
   function handleCloseMovie() {
     setSelectedId(null);
+  }
+
+  function handleAddWatched(movie: watchedMovieData) {
+    setWatched((watched) => [movie, ...watched]);
+  }
+
+  function handleDeleteWatched(id: string) {
+    setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
 
   useEffect(() => {
@@ -89,11 +97,16 @@ function App() {
             <MovieDetails
               selectedId={selectedId}
               onCloseMovie={handleCloseMovie}
+              onAddWatched={handleAddWatched}
+              watched={watched}
             />
           ) : (
             <>
               <WatchedSummary watched={watched} />
-              <WatchedMovieList watched={watched} />
+              <WatchedMovieList
+                watched={watched}
+                onDeleteWatched={handleDeleteWatched}
+              />
             </>
           )}
         </Box>
