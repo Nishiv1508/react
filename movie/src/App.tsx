@@ -45,6 +45,7 @@ function App() {
   }
 
   useEffect(() => {
+    const controller = new AbortController();
     async function fetchMovies() {
       if (query.length < 3) {
         setMovies([]);
@@ -53,7 +54,9 @@ function App() {
       }
       try {
         setLoading(true);
-        const res = await fetch(url + `&s=${query}`);
+        const res = await fetch(url + `&s=${query}`, {
+          signal: controller.signal,
+        });
         if (!res.ok) {
           throw new Error("Something went wrong");
         }
@@ -66,7 +69,9 @@ function App() {
       } catch (err) {
         if (err instanceof Error) {
           console.error(err.message);
-          setError(err.message);
+          if (err.name !== "AbortError") {
+            setError(err.message);
+          }
         } else {
           console.log("Error occurred");
         }
@@ -75,6 +80,11 @@ function App() {
       }
     }
     fetchMovies();
+
+    //cleanup function
+    return function () {
+      controller.abort();
+    };
   }, [query]);
 
   return (

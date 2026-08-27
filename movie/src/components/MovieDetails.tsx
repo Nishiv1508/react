@@ -54,6 +54,22 @@ export default function MovieDetails({
 
   useEffect(
     function () {
+      const callback = (e: KeyboardEvent) => {
+        if (e.code === "Escape") {
+          onCloseMovie();
+        }
+      };
+      document.addEventListener("keydown", callback);
+
+      return function () {
+        document.removeEventListener("keydown", callback);
+      };
+    },
+    [onCloseMovie],
+  );
+
+  useEffect(
+    function () {
       async function getMovieDetails() {
         setLoading(true);
         const res = await fetch(url + `&i=${selectedId}`);
@@ -65,6 +81,20 @@ export default function MovieDetails({
     },
     [selectedId],
   );
+
+  useEffect(
+    function () {
+      if (!title) return;
+      document.title = `Movie | ${title}`;
+
+      //cleanup effect
+      return function () {
+        document.title = "movie";
+      };
+    },
+    [title],
+  );
+
   return (
     <div className="details">
       {loading ? (
