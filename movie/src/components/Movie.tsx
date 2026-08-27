@@ -1,8 +1,14 @@
 import type { dummyMovieData } from "../interfaces/movieData";
 
-export default function Movie({ movie }: { movie: dummyMovieData }) {
+export default function Movie({
+  movie,
+  onSelectMovie,
+}: {
+  movie: dummyMovieData;
+  onSelectMovie: (id: string) => void;
+}) {
   return (
-    <li key={movie.imdbID}>
+    <li key={movie.imdbID} onClick={() => onSelectMovie(movie.imdbID)}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <h3>{movie.Title}</h3>
       <div>

@@ -15,6 +15,7 @@ import WatchedSummary from "./components/WatchedSummary.tsx";
 import WatchedMovieList from "./components/WatchedMovieList.tsx";
 import Loader from "./components/loader.tsx";
 import ErrorMessage from "./components/ErrorMessage.tsx";
+import MovieDetails from "./components/MovieDetails.tsx";
 
 const url: string = import.meta.env.VITE_OMDB_URL;
 
@@ -26,6 +27,14 @@ function App() {
   const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   // const tempquery: string = "interstellar";
+
+  function handleSelectMovie(id: string) {
+    setSelectedId((selectedId) => (id === selectedId ? null : id));
+  }
+
+  function handleCloseMovie() {
+    setSelectedId(null);
+  }
 
   useEffect(() => {
     async function fetchMovies() {
@@ -70,14 +79,23 @@ function App() {
         <Box>
           {/* {loading ? <Loader /> : <MovieList movies={movies} />} */}
           {loading && <Loader />}
-          {!loading && !error && <MovieList movies={movies} />}
+          {!loading && !error && (
+            <MovieList movies={movies} onSelectMovie={handleSelectMovie} />
+          )}
           {error && <ErrorMessage message={error} />}
         </Box>
         <Box>
-          <>
-            <WatchedSummary watched={watched} />
-            <WatchedMovieList watched={watched} />
-          </>
+          {selectedId ? (
+            <MovieDetails
+              selectedId={selectedId}
+              onCloseMovie={handleCloseMovie}
+            />
+          ) : (
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMovieList watched={watched} />
+            </>
+          )}
         </Box>
       </Main>
     </>
