@@ -21,7 +21,10 @@ const url: string = import.meta.env.VITE_OMDB_URL;
 
 function App() {
   const [movies, setMovies] = useState<dummyMovieData[]>([]);
-  const [watched, setWatched] = useState<watchedMovieData[]>([]);
+  const [watched, setWatched] = useState<watchedMovieData[]>(() => {
+    const storedValue: string = localStorage.getItem("watched") || "";
+    return JSON.parse(storedValue);
+  });
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -38,11 +41,16 @@ function App() {
 
   function handleAddWatched(movie: watchedMovieData) {
     setWatched((watched) => [movie, ...watched]);
+    // localStorage.setItem("watched", JSON.stringify([...watched, movie]));
   }
 
   function handleDeleteWatched(id: string) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
+
+  useEffect(() => {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  }, [watched]);
 
   useEffect(() => {
     const controller = new AbortController();
