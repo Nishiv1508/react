@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import type {
-  dummyMovieData,
-  watchedMovieData,
-} from "./interfaces/movieData.ts";
-import type { movieResponseData } from "./interfaces/movieData.ts";
+import type { watchedMovieData } from "./interfaces/movieData.ts";
 
 import Navbar from "./components/Navbar.tsx";
 import Search from "./components/Search.tsx";
@@ -16,20 +12,18 @@ import WatchedMovieList from "./components/WatchedMovieList.tsx";
 import Loader from "./components/loader.tsx";
 import ErrorMessage from "./components/ErrorMessage.tsx";
 import MovieDetails from "./components/MovieDetails.tsx";
-
-const url: string = import.meta.env.VITE_OMDB_URL;
+import useMovies from "./hooks/useMovies.ts";
 
 function App() {
-  const [movies, setMovies] = useState<dummyMovieData[]>([]);
   const [watched, setWatched] = useState<watchedMovieData[]>(() => {
     const storedValue: string = localStorage.getItem("watched") || "";
     return JSON.parse(storedValue);
   });
   const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   // const tempquery: string = "interstellar";
+
+  const { movies, loading, error } = useMovies(query);
 
   function handleSelectMovie(id: string) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
@@ -51,49 +45,6 @@ function App() {
   useEffect(() => {
     localStorage.setItem("watched", JSON.stringify(watched));
   }, [watched]);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    async function fetchMovies() {
-      if (query.length < 3) {
-        setMovies([]);
-        setError("");
-        return;
-      }
-      try {
-        setLoading(true);
-        const res = await fetch(url + `&s=${query}`, {
-          signal: controller.signal,
-        });
-        if (!res.ok) {
-          throw new Error("Something went wrong");
-        }
-        const data: movieResponseData = await res.json();
-        if (data.Response === "False") {
-          throw new Error("Movie not found");
-        }
-        setError("");
-        setMovies(data.Search);
-      } catch (err) {
-        if (err instanceof Error) {
-          console.error(err.message);
-          if (err.name !== "AbortError") {
-            setError(err.message);
-          }
-        } else {
-          console.log("Error occurred");
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchMovies();
-
-    //cleanup function
-    return function () {
-      controller.abort();
-    };
-  }, [query]);
 
   return (
     <>
