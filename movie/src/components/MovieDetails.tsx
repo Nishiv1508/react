@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { movieDetails, watchedMovieData } from "../interfaces/movieData";
 import StarComponent from "./StarComponent";
 import Loader from "./loader";
+import useKey from "../hooks/useKey";
 
 const url: string = import.meta.env.VITE_OMDB_URL;
 
@@ -52,21 +53,7 @@ export default function MovieDetails({
     onCloseMovie();
   }
 
-  useEffect(
-    function () {
-      const callback = (e: KeyboardEvent) => {
-        if (e.code === "Escape") {
-          onCloseMovie();
-        }
-      };
-      document.addEventListener("keydown", callback);
-
-      return function () {
-        document.removeEventListener("keydown", callback);
-      };
-    },
-    [onCloseMovie],
-  );
+  useKey("Escape", onCloseMovie);
 
   useEffect(
     function () {
